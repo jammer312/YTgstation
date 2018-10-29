@@ -117,7 +117,7 @@
 	else
 		if(ishuman(user))
 			var/mob/living/carbon/human/h = user
-			user_id_card = h.get_idcard()
+			user_id_card = h.get_idcard(TRUE)
 
 	switch(action)
 		if("PRG_switchm")
@@ -365,8 +365,8 @@
 			var/obj/item/card/id/id_card = card_slot.stored_card
 
 			data["has_id"] = !!id_card
-			data["id_rank"] = id_card && id_card.assignment ? rhtml_encode(id_card.assignment) : "Unassigned"
-			data["id_owner"] = id_card && id_card.registered_name ? rhtml_encode(id_card.registered_name) : "-----"
+			data["id_rank"] = id_card && id_card.assignment ? html_encode(id_card.assignment) : "Unassigned"
+			data["id_owner"] = id_card && id_card.registered_name ? html_encode(id_card.registered_name) : "-----"
 			data["id_name"] = id_card ? strip_html_simple(id_card.name) : "-----"
 
 			if(show_assignments)

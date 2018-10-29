@@ -4,8 +4,6 @@
 	set instant = TRUE
 	set hidden = TRUE
 
-	_key = rkeyconvert(_key)
-
 	keys_held[_key] = world.time
 	var/movement = SSinput.movement_keys[_key]
 	if(!(next_move_dir_sub & movement) && !keys_held["Ctrl"])
@@ -15,8 +13,15 @@
 	// Things like taking screenshots, hitting tab, and adminhelps.
 
 	switch(_key)
-		if("O")
-			ooc(verbtextinput("OOC"))
+		if("F1")
+			if(keys_held["Ctrl"] && keys_held["Shift"]) // Is this command ever used?
+				winset(src, null, "command=.options")
+			else
+				get_adminhelp()
+			return
+		if("F2") // Screenshot. Hold shift to choose a name and location to save in
+			winset(src, null, "command=.screenshot [!keys_held["shift"] ? "auto" : ""]")
+			return
 		if("F12") // Toggles minimal HUD
 			mob.button_pressed_F12()
 			return
@@ -29,8 +34,6 @@
 /client/verb/keyUp(_key as text)
 	set instant = TRUE
 	set hidden = TRUE
-
-	_key = rkeyconvert(_key)
 
 	keys_held -= _key
 	var/movement = SSinput.movement_keys[_key]

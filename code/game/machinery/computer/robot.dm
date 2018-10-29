@@ -37,11 +37,11 @@
 		dat += "[R.name] |"
 		if(R.stat)
 			dat += " Not Responding |"
-		else if (!R.canmove)
+		else if (!(R.mobility_flags & MOBILITY_MOVE))
 			dat += " Locked Down |"
 		else
 			dat += " Operating Normally |"
-		if (!R.canmove)
+		if (!(R.mobility_flags & MOBILITY_MOVE))
 		else if(R.cell)
 			dat += " Battery Installed ([R.cell.charge]/[R.cell.maxcharge]) |"
 		else
@@ -62,7 +62,7 @@
 				dat += "<A href='?src=[REF(src)];magbot=[REF(R)]'>(<font color=blue><i>Hack</i></font>)</A> "
 		else if(IsAdminGhost(user) && !R.emagged)
 			dat += "<A href='?src=[REF(src)];magbot=[REF(R)]'>(<font color=blue><i>Hack</i></font>)</A> "
-		dat += "<A href='?src=[REF(src)];stopbot=[REF(R)]'>(<font color=green><i>[R.canmove ? "Lockdown" : "Release"]</i></font>)</A> "
+		dat += "<A href='?src=[REF(src)];stopbot=[REF(R)]'>(<font color=green><i>[(R.mobility_flags & MOBILITY_MOVE) ? "Lockdown" : "Release"]</i></font>)</A> "
 		dat += "<A href='?src=[REF(src)];killbot=[REF(R)]'>(<font color=red><i>Destroy</i></font>)</A>"
 		dat += "<BR>"
 
@@ -116,14 +116,14 @@
 		if(src.allowed(usr))
 			var/mob/living/silicon/robot/R = locate(href_list["stopbot"]) in GLOB.silicon_mobs
 			if(can_control(usr, R))
-				var/choice = input("Are you certain you wish to [R.canmove ? "lock down" : "release"] [R.name]?") in list("Confirm", "Abort")
+				var/choice = input("Are you certain you wish to [!R.lockcharge ? "lock down" : "release"] [R.name]?") in list("Confirm", "Abort")
 				if(choice == "Confirm" && can_control(usr, R) && !..())
-					message_admins("<span class='notice'>[ADMIN_LOOKUPFLW(usr)] [R.canmove ? "locked down" : "released"] [key_name(R, R.client)][ADMIN_LOOKUPFLW(R)]!</span>")
-					log_game("[key_name(usr)] [R.canmove ? "locked down" : "released"] [key_name(R)]!")
+					message_admins("<span class='notice'>[ADMIN_LOOKUPFLW(usr)] [!R.lockcharge ? "locked down" : "released"] [key_name(R, R.client)][ADMIN_LOOKUPFLW(R)]!</span>")
+					log_game("[key_name(usr)] [!R.lockcharge ? "locked down" : "released"] [key_name(R)]!")
 					R.SetLockdown(!R.lockcharge)
 					to_chat(R, "[!R.lockcharge ? "<span class='notice'>Your lockdown has been lifted!" : "<span class='alert'>You have been locked down!"]</span>")
 					if(R.connected_ai)
-						to_chat(R.connected_ai, "[!R.lockcharge ? "<span class='notice'>NOTICE - Cyborg lockdown lifted" : "<span class='alert'>ALERT - Cyborg lockdown detected"]: <a href='?src=[REF(R.connected_ai)];track=[rhtml_encode(R.name)]'>[R.name]</a></span><br>")
+						to_chat(R.connected_ai, "[!R.lockcharge ? "<span class='notice'>NOTICE - Cyborg lockdown lifted" : "<span class='alert'>ALERT - Cyborg lockdown detected"]: <a href='?src=[REF(R.connected_ai)];track=[html_encode(R.name)]'>[R.name]</a></span><br>")
 
 		else
 			to_chat(usr, "<span class='danger'>Access Denied.</span>")

@@ -1,7 +1,6 @@
 
 ////////////////////////////////
 /proc/message_admins(msg)
-	webhook_send_garbage("ADMIN LOG", msg)
 	msg = "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> <span class=\"message linkify\">[msg]</span></span>"
 	to_chat(GLOB.admins, msg)
 
@@ -780,9 +779,9 @@
 	for(var/j in SSjob.occupations)
 		var/datum/job/job = j
 		count++
-		var/J_title = rhtml_encode(job.title)
-		var/J_opPos = rhtml_encode(job.total_positions - (job.total_positions - job.current_positions))
-		var/J_totPos = rhtml_encode(job.total_positions)
+		var/J_title = html_encode(job.title)
+		var/J_opPos = html_encode(job.total_positions - (job.total_positions - job.current_positions))
+		var/J_totPos = html_encode(job.total_positions)
 		dat += "<tr><td>[J_title]:</td> <td>[J_opPos]/[job.total_positions < 0 ? " (unlimited)" : J_totPos]"
 
 		dat += "</td>"

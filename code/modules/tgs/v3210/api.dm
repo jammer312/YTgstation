@@ -129,7 +129,7 @@
 		if(SERVICE_CMD_PLAYER_COUNT)
 			return "[TGS_CLIENT_COUNT]"
 		if(SERVICE_CMD_LIST_CUSTOM)
-			return r_json_encode(ListServiceCustomCommands(FALSE))
+			return json_encode(ListServiceCustomCommands(FALSE))
 		else
 			var/custom_command_result = HandleServiceCustomCommand(lowertext(command), params[SERVICE_CMD_PARAM_SENDER], params[SERVICE_CMD_PARAM_CUSTOM])
 			if(custom_command_result)
@@ -171,6 +171,7 @@
 	var/datum/tgs_revision_information/ri = new
 	ri.commit = commit
 	ri.origin_commit = originmastercommit
+	return ri
 
 /datum/tgs_api/v3210/EndProcess()
 	sleep(world.tick_lag)	//flush the buffers

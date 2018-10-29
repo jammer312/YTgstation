@@ -1,3 +1,4 @@
+
 /obj/item/camera/siliconcam
 	name = "silicon photo camera"
 	var/in_camera_mode = FALSE

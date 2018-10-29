@@ -72,7 +72,7 @@
 	end_state.count()
 	var/station_integrity = min(PERCENT(GLOB.start_state.score(end_state)), 100)
 	file_data["additional data"]["station integrity"] = station_integrity
-	WRITE_FILE(json_file, r_json_encode(file_data))
+	WRITE_FILE(json_file, json_encode(file_data))
 	SSblackbox.record_feedback("nested tally", "round_end_stats", num_survivors, list("survivors", "total"))
 	SSblackbox.record_feedback("nested tally", "round_end_stats", num_escapees, list("escapees", "total"))
 	SSblackbox.record_feedback("nested tally", "round_end_stats", GLOB.joined_player_list.len, list("players", "total"))
@@ -157,7 +157,7 @@
 		pos++
 	if(GLOB.news_network.wanted_issue.active)
 		file_data["wanted"] = list("author" = "[GLOB.news_network.wanted_issue.scannedUser]", "criminal" = "[GLOB.news_network.wanted_issue.criminal]", "description" = "[GLOB.news_network.wanted_issue.body]", "photo file" = "[GLOB.news_network.wanted_issue.photo_file]")
-	WRITE_FILE(json_file, r_json_encode(file_data))
+	WRITE_FILE(json_file, json_encode(file_data))
 
 /datum/controller/subsystem/ticker/proc/declare_completion()
 	set waitfor = FALSE
@@ -313,7 +313,7 @@
 	roundend_report.set_content(content)
 	roundend_report.stylesheets = list()
 	roundend_report.add_stylesheet("roundend", 'html/browser/roundend.css')
-	roundend_report.open(0)
+	roundend_report.open(FALSE)
 
 /datum/controller/subsystem/ticker/proc/personal_report(client/C, popcount)
 	var/list/parts = list()
@@ -410,11 +410,15 @@
 	var/list/all_teams = list()
 	var/list/all_antagonists = list()
 
+	for(var/datum/team/A in GLOB.antagonist_teams)
+		if(!A.members)
+			continue
+		all_teams |= A
+	
 	for(var/datum/antagonist/A in GLOB.antagonists)
 		if(!A.owner)
 			continue
-		all_teams |= A.get_team()
-		all_antagonists += A
+		all_antagonists |= A
 
 	for(var/datum/team/T in all_teams)
 		result += T.roundend_report()
@@ -559,7 +563,7 @@
 				continue
 		file_data["admins"]["[i]"] = A.rank.name
 	fdel(json_file)
-	WRITE_FILE(json_file, r_json_encode(file_data))
+	WRITE_FILE(json_file, json_encode(file_data))
 
 /datum/controller/subsystem/ticker/proc/update_everything_flag_in_db()
 	for(var/datum/admin_rank/R in GLOB.admin_ranks)

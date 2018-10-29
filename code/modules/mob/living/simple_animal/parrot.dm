@@ -149,7 +149,7 @@
 		if(!radio_freq || prob(10))
 			if(speech_buffer.len >= 500)
 				speech_buffer -= pick(speech_buffer)
-			speech_buffer |= rhtml_decode(raw_message)
+			speech_buffer |= html_decode(raw_message)
 	if(speaker == src && !client) //If a parrot squawks in the woods and no one is around to hear it, does it make a sound? This code says yes!
 		return message
 
@@ -391,7 +391,7 @@
 
 
 /mob/living/simple_animal/parrot/handle_automated_movement()
-	if(!isturf(src.loc) || !canmove || buckled)
+	if(!isturf(src.loc) || !(mobility_flags & MOBILITY_MOVE) || buckled)
 		return //If it can't move, dont let it move. (The buckled check probably isn't necessary thanks to canmove)
 
 	if(client && stat == CONSCIOUS && parrot_state != icon_living)
@@ -963,7 +963,7 @@
 			file_data["longestsurvival"] = longest_survival
 		file_data["longestdeathstreak"] = longest_deathstreak
 	fdel(json_file)
-	WRITE_FILE(json_file, r_json_encode(file_data))
+	WRITE_FILE(json_file, json_encode(file_data))
 
 /mob/living/simple_animal/parrot/Poly/ratvar_act()
 	playsound(src, 'sound/magic/clockwork/fellowship_armory.ogg', 75, TRUE)

@@ -5,10 +5,7 @@
 /tmp/**/*
 
 #Ignore byond config folder.
-cfg/**/*
-config/**/*
-
-
+/cfg/**/*
 
 #Ignore compiled files and other files generated during compilation.
 *.mdme
@@ -203,7 +200,6 @@ tools/MapAtmosFixer/MapAtmosFixer/bin/*
 
 #GitHub Atom
 .atom-build.json
-config/game_options.txt
 
 #extra map stuff
 /_maps/**/backup/

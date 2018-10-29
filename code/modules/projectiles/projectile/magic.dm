@@ -6,7 +6,6 @@
 	nodamage = 1
 	armour_penetration = 100
 	flag = "magic"
-	speed = 0.6
 
 /obj/item/projectile/magic/death
 	name = "bolt of death"
@@ -125,8 +124,8 @@
 	if(!istype(M) || M.stat == DEAD || M.notransform || (GODMODE & M.status_flags))
 		return
 
-	M.notransform = 1
-	M.canmove = 0
+	M.notransform = TRUE
+	M.mobility_flags = NONE
 	M.icon = null
 	M.cut_overlays()
 	M.invisibility = INVISIBILITY_ABSTRACT

@@ -16,21 +16,12 @@ SUBSYSTEM_DEF(ticker)
 
 	var/hide_mode = 0
 	var/datum/game_mode/mode = null
-	var/event_time = null
-	var/event = 0
 
 	var/login_music							//music played in pregame lobby
 	var/round_end_sound						//music/jingle played when the world reboots
 	var/round_end_sound_sent = TRUE			//If all clients have loaded it
 
 	var/list/datum/mind/minds = list()		//The characters in the game. Used for objective tracking.
-
-	var/list/syndicate_coalition = list()	//list of traitor-compatible factions
-	var/list/factions = list()				//list of all factions
-	var/list/availablefactions = list()		//list of factions with openings
-	var/list/scripture_states = list(SCRIPTURE_DRIVER = TRUE, \
-	SCRIPTURE_SCRIPT = FALSE, \
-	SCRIPTURE_APPLICATION = FALSE) //list of clockcult scripture states for announcements
 
 	var/delay_end = 0						//if set true, the round will not restart on it's own
 	var/admin_delay_notice = ""				//a message to display to anyone who tries to restart the world after a delay
@@ -146,7 +137,6 @@ SUBSYSTEM_DEF(ticker)
 			if(CONFIG_GET(flag/irc_announce_new_game))
 				world.TgsTargetedChatBroadcast("New round starting on [SSmapping.config.map_name]!", FALSE)
 			current_state = GAME_STATE_PREGAME
-			webhook_send_roundstatus("lobby")
 			//Everyone who wants to be an observer is now spawned
 			create_observers()
 			fire()
@@ -186,14 +176,11 @@ SUBSYSTEM_DEF(ticker)
 				start_at = world.time + (CONFIG_GET(number/lobby_countdown) * 10)
 				timeLeft = null
 				Master.SetRunLevel(RUNLEVEL_LOBBY)
-			else
-				webhook_send_roundstatus("ingame")
 
 		if(GAME_STATE_PLAYING)
 			mode.process(wait * 0.1)
 			check_queue()
 			check_maprotate()
-			scripture_states = scripture_unlock_alert(scripture_states)
 
 			if(!roundend_check_paused && mode.check_finished(force_ending) || force_ending)
 				current_state = GAME_STATE_FINISHED
@@ -409,7 +396,7 @@ SUBSYSTEM_DEF(ticker)
 			m = pick(memetips)
 
 	if(m)
-		to_chat(world, "<font color='purple'><b>Tip of the round: </b>[rhtml_encode(m)]</font>")
+		to_chat(world, "<font color='purple'><b>Tip of the round: </b>[html_encode(m)]</font>")
 
 /datum/controller/subsystem/ticker/proc/check_queue()
 	var/hpc = CONFIG_GET(number/hard_popcap)
@@ -460,17 +447,11 @@ SUBSYSTEM_DEF(ticker)
 	force_ending = SSticker.force_ending
 	hide_mode = SSticker.hide_mode
 	mode = SSticker.mode
-	event_time = SSticker.event_time
-	event = SSticker.event
 
 	login_music = SSticker.login_music
 	round_end_sound = SSticker.round_end_sound
 
 	minds = SSticker.minds
-
-	syndicate_coalition = SSticker.syndicate_coalition
-	factions = SSticker.factions
-	availablefactions = SSticker.availablefactions
 
 	delay_end = SSticker.delay_end
 

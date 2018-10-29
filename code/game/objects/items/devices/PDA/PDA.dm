@@ -591,6 +591,10 @@ GLOBAL_LIST_EMPTY(PDAs)
 		to_chat(usr, "<span class='notice'>You remove the ID from the [name].</span>")
 		id = null
 		update_icon()
+		if(ishuman(loc))
+			var/mob/living/carbon/human/H = loc
+			if(H.wear_id == src)
+				H.sec_hud_set_ID()
 
 /obj/item/pda/proc/msg_input(mob/living/U = usr)
 	var/t = stripped_input(U, "Please enter message", name)
@@ -674,7 +678,7 @@ GLOBAL_LIST_EMPTY(PDAs)
 		var/hrefstart
 		var/hrefend
 		if (isAI(L))
-			hrefstart = "<a href='?src=[REF(L)];track=[rhtml_encode(signal.data["name"])]'>"
+			hrefstart = "<a href='?src=[REF(L)];track=[html_encode(signal.data["name"])]'>"
 			hrefend = "</a>"
 
 		to_chat(L, "[icon2html(src)] <b>Message from [hrefstart][signal.data["name"]] ([signal.data["job"]])[hrefend], </b>[signal.format_message()] (<a href='byond://?src=[REF(src)];choice=Message;skiprefresh=1;target=[REF(signal.source)]'>Reply</a>)")
@@ -770,6 +774,10 @@ GLOBAL_LIST_EMPTY(PDAs)
 			return FALSE
 		var/obj/old_id = id
 		id = I
+		if(ishuman(loc))
+			var/mob/living/carbon/human/H = loc
+			if(H.wear_id == src)
+				H.sec_hud_set_ID()
 		if(old_id)
 			user.put_in_hands(old_id)
 		update_icon()
@@ -875,7 +883,7 @@ GLOBAL_LIST_EMPTY(PDAs)
 		note = replacetext(note, "<li>", "\[*\]")
 		note = replacetext(note, "<ul>", "\[list\]")
 		note = replacetext(note, "</ul>", "\[/list\]")
-		note = rhtml_encode(note)
+		note = html_encode(note)
 		notescanned = TRUE
 		to_chat(user, "<span class='notice'>Paper scanned. Saved to PDA's notekeeper.</span>" )
 

@@ -1,7 +1,7 @@
 	////////////
 	//SECURITY//
 	////////////
-#define UPLOAD_LIMIT		6291456	//Restricts client uploads to the server to 6MB //Could probably do with being lower.
+#define UPLOAD_LIMIT		1048576	//Restricts client uploads to the server to 1MB //Could probably do with being lower.
 
 GLOBAL_LIST_INIT(blacklisted_builds, list(
 	"1407" = "bug preventing client display overrides from working leads to clients being able to see things/mobs they shouldn't be able to see",
@@ -205,8 +205,7 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
 		verbs += /client/proc/show_previous_roundend_report
 
 	var/full_version = "[byond_version].[byond_build ? byond_build : "xxx"]"
-	log_access("Login: [key_name(src)] from [address ? address : "localhost"]-[computer_id] || BYOND v[byond_version].[byond_build ? byond_build : "xxx"]")
-	webhook_send_status_update("client_login","[src.key]")
+	log_access("Login: [key_name(src)] from [address ? address : "localhost"]-[computer_id] || BYOND v[full_version]")
 
 	var/alert_mob_dupe_login = FALSE
 	if(CONFIG_GET(flag/log_access))
@@ -401,7 +400,6 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
 	if(credits)
 		QDEL_LIST(credits)
 	log_access("Logout: [key_name(src)]")
-	webhook_send_status_update("client_logoff","[src.key]")
 	if(holder)
 		adminGreet(1)
 		holder.owner = null
@@ -826,7 +824,7 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
 		var/mob/living/M = mob
 		M.update_damage_hud()
 	if (prefs.auto_fit_viewport)
-		fit_viewport()
+		addtimer(CALLBACK(src,.verb/fit_viewport,10)) //Delayed to avoid wingets from Login calls.
 
 /client/proc/generate_clickcatcher()
 	if(!void)

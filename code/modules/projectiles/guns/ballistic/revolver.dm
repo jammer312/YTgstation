@@ -2,6 +2,7 @@
 	name = "\improper .357 revolver"
 	desc = "A suspicious revolver. Uses .357 ammo." //usually used by syndicates
 	icon_state = "revolver"
+	mag_type = /obj/item/ammo_box/magazine/internal/cylinder
 	casing_ejector = FALSE
 
 /obj/item/gun/ballistic/revolver/Initialize()
@@ -88,6 +89,7 @@
 	name = "\improper .38 Mars Special"
 	desc = "A cheap Martian knock-off of a classic law enforcement firearm. Uses .38-special rounds."
 	icon_state = "detective"
+	mag_type = /obj/item/ammo_box/magazine/internal/cylinder/rev38
 	obj_flags = UNIQUE_RENAME
 	unique_reskin = list("Default" = "detective",
 						"Leopard Spots" = "detective_leopard",
@@ -157,7 +159,7 @@
 	icon_state = "nagant"
 	can_suppress = TRUE
 
-
+	mag_type = /obj/item/ammo_box/magazine/internal/cylinder/rev762
 
 
 // A gun to play Russian Roulette!
@@ -166,9 +168,9 @@
 /obj/item/gun/ballistic/revolver/russian
 	name = "\improper Russian revolver"
 	desc = "A Russian-made revolver for drinking games. Uses .357 ammo, and has a mechanism requiring you to spin the chamber before each trigger pull."
+	mag_type = /obj/item/ammo_box/magazine/internal/cylinder/rus357
+	var/spun = FALSE
 
-
-/*
 /obj/item/gun/ballistic/revolver/russian/Initialize()
 	. = ..()
 	do_spin()
@@ -234,11 +236,11 @@
 /obj/item/gun/ballistic/revolver/russian/proc/shoot_self(mob/living/carbon/human/user, affecting = BODY_ZONE_HEAD)
 	user.apply_damage(300, BRUTE, affecting)
 	user.visible_message("<span class='danger'>[user.name] fires [src] at [user.p_their()] head!</span>", "<span class='userdanger'>You fire [src] at your head!</span>", "<span class='italics'>You hear a gunshot!</span>")
-*/
+
 /obj/item/gun/ballistic/revolver/russian/soul
 	name = "cursed Russian revolver"
 	desc = "To play with this revolver requires wagering your very soul."
-/*
+
 /obj/item/gun/ballistic/revolver/russian/soul/shoot_self(mob/living/user)
 	..()
 	var/obj/item/soulstone/anybody/SS = new /obj/item/soulstone/anybody(get_turf(src))
@@ -246,7 +248,7 @@
 		qdel(SS)
 		return
 	user.visible_message("<span class='danger'>[user.name]'s soul is captured by \the [src]!</span>", "<span class='userdanger'>You've lost the gamble! Your soul is forfeit!</span>")
-*/
+
 /////////////////////////////
 // DOUBLE BARRELED SHOTGUN //
 /////////////////////////////
@@ -356,4 +358,4 @@
 		user.visible_message("<span class='warning'>[user] somehow manages to shoot [user.p_them()]self in the face!</span>", "<span class='userdanger'>You somehow shoot yourself in the face! How the hell?!</span>")
 		user.emote("scream")
 		user.drop_all_held_items()
-		user.Knockdown(80)
+		user.Paralyze(80)

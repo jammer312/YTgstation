@@ -57,9 +57,9 @@
 		var/obj/O = assembly ? assembly : src
 		to_chat(M, "<span class='notice'>[icon2html(O.icon, world, O.icon_state)] [stuff_to_display]</span>")
 	if(assembly)
-		assembly.investigate_log("displayed \"[rhtml_encode(stuff_to_display)]\" with [type].", INVESTIGATE_CIRCUIT)
+		assembly.investigate_log("displayed \"[html_encode(stuff_to_display)]\" with [type].", INVESTIGATE_CIRCUIT)
 	else
-		investigate_log("displayed \"[rhtml_encode(stuff_to_display)]\" as [type].", INVESTIGATE_CIRCUIT)
+		investigate_log("displayed \"[html_encode(stuff_to_display)]\" as [type].", INVESTIGATE_CIRCUIT)
 
 /obj/item/integrated_circuit/output/light
 	name = "light"
